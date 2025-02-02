@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateColumnRequest;
+use App\Http\Requests\UpdateColumnOrderIndex;
 use App\Http\Requests\UpdateColumnRequest;
 use App\Service\ColumnService;
 use Exception;
@@ -27,6 +28,15 @@ class ColumnController extends Controller
     {
         $column = $this->columnService->update($request->validated(), $id);
         return response()->json($column, 200);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function moveColumnInBoard(UpdateColumnOrderIndex $request): JsonResponse
+    {
+        $this->columnService->moveColumnInBoard($request->validated());
+        return response()->json(['message' => 'Column order updated successfully'], 200);
     }
 
     /**

@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Column extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
     protected $fillable = [
         'title',

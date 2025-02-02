@@ -3,8 +3,10 @@
 namespace App\Service;
 
 use App\Models\Card;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class CardService
 {
@@ -25,5 +27,49 @@ class CardService
         ]);
 
         return $card;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function moveCardInColumn($orderedCardIds): void
+    {
+        if (empty($orderedCardIds)) {
+            throw new Exception('Invalid ordered_cards_ids', 400);
+        }
+
+        $caseStatement = "CASE id ";
+        foreach ($orderedCardIds as $index => $id) {
+            $caseStatement .= "WHEN {$id} THEN " . ($index + 1) . " ";
+        }
+        $caseStatement .= "END";
+
+        DB::table('cards')
+            ->whereIn('id', $orderedCardIds)
+            ->update(['order_index' => DB::raw($caseStatement)]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function moveCardToDifferentColumn(
+        $card_id,
+        $next_column_id,
+        $next_card_order_index,
+        $prev_card_order_index
+    ): void
+    {
+        // update card column_id
+        $this->modelQuery()->find($card_id)->update([
+            'column_id' => $next_column_id
+        ]);
+
+        // update card order_index in the current column
+        if ($prev_card_order_index != []) {
+            $this->moveCardInColumn($prev_card_order_index);
+        }
+
+        // update card order_index in the next column
+        $this->moveCardInColumn($next_card_order_index);
     }
 }

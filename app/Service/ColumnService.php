@@ -6,6 +6,7 @@ use App\Models\Column;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ColumnService
 {
@@ -35,6 +36,29 @@ class ColumnService
         $column->update($request_body);
 
         return $column;
+    }
+
+
+    /**
+     * @throws Exception
+     */
+    public function moveColumnInBoard($request_body): void
+    {
+        $orderedColumnIds = $request_body['ordered_column_ids']; // Mảng ID đã sắp xếp
+
+        if (empty($orderedColumnIds)) {
+            throw new Exception('Invalid ordered_column_ids', 400);
+        }
+
+        $caseStatement = "CASE id ";
+        foreach ($orderedColumnIds as $index => $id) {
+            $caseStatement .= "WHEN {$id} THEN " . ($index + 1) . " ";
+        }
+        $caseStatement .= "END";
+
+        DB::table('columns')
+            ->whereIn('id', $orderedColumnIds)
+            ->update(['order_index' => DB::raw($caseStatement)]);
     }
 
     /**

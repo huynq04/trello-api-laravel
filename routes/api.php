@@ -29,10 +29,13 @@ Route::prefix('boards')->group(function () {
 
 Route::prefix('columns')->group(function () {
     Route::post('/', [ColumnController::class, 'store']);
+    Route::put('/move', [ColumnController::class, 'moveColumnInBoard']);
     Route::put('/{id}', [ColumnController::class, 'update']);
     Route::delete('/{id}', [ColumnController::class, 'delete']);
 });
 
 Route::prefix('cards')->group(function () {
     Route::post('/', [CardController::class, 'store']);
+    Route::put('/move-to-different-column', [CardController::class, 'moveCardToDifferentColumn']);
+    Route::put('/move', [CardController::class, 'moveCardInColumn']);
 });
