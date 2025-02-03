@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateCardRequest;
 use App\Http\Requests\UpdateCardOrderIndex;
 use App\Http\Requests\UpdateCardOrderIndexInDifferentColumn;
-use App\Service\CardService;
+use App\Services\CardService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

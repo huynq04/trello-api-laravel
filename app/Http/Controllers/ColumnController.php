@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateColumnRequest;
 use App\Http\Requests\UpdateColumnOrderIndex;
 use App\Http\Requests\UpdateColumnRequest;
-use App\Service\ColumnService;
+use App\Services\ColumnService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
