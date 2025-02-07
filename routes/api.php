@@ -17,24 +17,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::middleware(['auth:sanctum'])->get('/me', function (Request $request) {
+    return $request->user();
+});
 
-Route::prefix('boards')->group(function () {
+Route::prefix('boards')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/', [BoardController::class, 'store']);
     Route::get('/{id}', [BoardController::class, 'show']);
     Route::put('/{id}', [BoardController::class, 'update']);
 });
 
-Route::prefix('columns')->group(function () {
+Route::prefix('columns')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/', [ColumnController::class, 'store']);
     Route::put('/move', [ColumnController::class, 'moveColumnInBoard']);
     Route::put('/{id}', [ColumnController::class, 'update']);
     Route::delete('/{id}', [ColumnController::class, 'delete']);
 });
 
-Route::prefix('cards')->group(function () {
+Route::prefix('cards')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/', [CardController::class, 'store']);
     Route::put('/move-to-different-column', [CardController::class, 'moveCardToDifferentColumn']);
     Route::put('/move', [CardController::class, 'moveCardInColumn']);
