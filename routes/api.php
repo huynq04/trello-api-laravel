@@ -27,6 +27,7 @@ Route::prefix('users')->middleware(['auth:sanctum', 'verified'])->group(function
 });
 
 Route::prefix('boards')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/', [BoardController::class, 'getBoards']);
     Route::post('/', [BoardController::class, 'store']);
     Route::get('/{id}', [BoardController::class, 'show']);
     Route::put('/{id}', [BoardController::class, 'update']);
