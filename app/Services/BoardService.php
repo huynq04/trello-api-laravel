@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Board;
+use App\Models\UserBoard;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -24,6 +25,15 @@ class BoardService
         ];
 
         return $this->modelQuery()->create($newBoard);
+    }
+
+    public function createUserBoardRole($userId, $boardId, $role): Model|Builder
+    {
+        return UserBoard::query()->create([
+            'user_id' => $userId,
+            'board_id' => $boardId,
+            'role' => $role,
+        ]);
     }
 
     /**

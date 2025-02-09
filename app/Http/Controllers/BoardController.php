@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserBoardRole;
 use App\Http\Requests\CreateBoardRequest;
 use App\Http\Requests\UpdateBoardRequest;
 use App\Models\Board;
@@ -25,19 +26,27 @@ class BoardController extends Controller
         $page = (int) $request->query('page', 1);
         $limit = (int) $request->query('limit', 12);
 
-        $boards = User::query()->findOrFail($userId)
-            ->boards()
+        $boards = Board::query()
+            ->whereHas('userBoard', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
             ->orderBy('created_at', 'desc')
             ->paginate($limit, ['*'], 'page', $page);
 
         return response()->json($boards, 200);
     }
 
-
     public function store(CreateBoardRequest $request): JsonResponse
     {
         $board = $this->boardService->createNew($request->validated());
-        return response()->json($board, 200);
+
+        $boardRole = $this->boardService->createUserBoardRole(
+            $request->user()->id,
+            $board->id,
+            UserBoardRole::Owner->value
+        );
+
+        return response()->json($board, 201);
     }
 
     /**

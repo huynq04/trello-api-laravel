@@ -19,9 +19,14 @@ class Board extends Model
         'type',
     ];
 
+    public function userBoard(): HasMany
+    {
+        return $this->hasMany(UserBoard::class);
+    }
+
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_board_roles');
+        return $this->belongsToMany(User::class, 'user_boards');
     }
 
     public function columns(): HasMany
